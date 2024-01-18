@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_number_2/screens/store/add_contact_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ContactScreen extends StatelessWidget {
+class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
+
+  @override
+  State<ContactScreen> createState() => _ContactScreenState();
+}
+
+class _ContactScreenState extends State<ContactScreen> {
+  Future<void> getListContact() async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = prefs.get('contact_list');
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getListContact();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
