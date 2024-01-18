@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_number_2/screens/store/add_contact_screen.dart';
+import 'package:flutter_number_2/screens/store/add_data_screeen.dart';
 
 class DataScreen extends StatelessWidget {
   const DataScreen({super.key});
@@ -23,7 +24,7 @@ class DataScreen extends StatelessWidget {
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(
               builder: (context) {
-                return const AddContactScreen();
+                return const AddDataScreen();
               },
             ));
           },
