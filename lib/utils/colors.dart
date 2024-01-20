@@ -8,6 +8,7 @@ const Color ternary = Color(0xffFFAC4A);
 // NEUTRAL COLOR
 const Color white = Color(0xffffffff);
 const Color black = Color(0xff313131);
+const Color red = Color(0xffD90000);
 const Color grey = Color(0xFF777C7E);
 const Color grey2 = Color(0xFF8388A0);
 const Color lightGrey = Color(0xFFD3D3D3);

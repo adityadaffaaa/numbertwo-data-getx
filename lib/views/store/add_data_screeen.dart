@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_number_2/controllers/data/data_controller.dart';
 import 'package:flutter_number_2/widgets/button_primary.dart';
 import 'package:flutter_number_2/widgets/button_secondary.dart';
 import 'package:flutter_number_2/utils/colors.dart' as app_color;
 import 'package:flutter_number_2/utils/typography.dart' as app_typo;
 import 'package:flutter_number_2/utils/images.dart' as app_img;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
-class AddMediaScreen extends StatelessWidget {
-  const AddMediaScreen({super.key});
+class AddDataScreen extends StatelessWidget {
+  const AddDataScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController nameCtrl = TextEditingController();
-    final TextEditingController phoneNumberCtrl = TextEditingController();
+    final TextEditingController dataCtrl = TextEditingController();
 
-    Future<void> addContact(Map<String, dynamic> value) async {
-      print('TESTING -> $value');
-      final prefs = await SharedPreferences.getInstance();
-
-      prefs.setStringList('contact_list', [value.toString()]);
-    }
+    final DataController dataController = Get.put(DataController());
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Media'),
+        title: const Text('Add Data'),
         backgroundColor: app_color.primary,
       ),
       body: Padding(
@@ -31,10 +27,10 @@ class AddMediaScreen extends StatelessWidget {
         child: ListView(
           children: [
             TextFormField(
-              controller: nameCtrl,
+              controller: dataCtrl,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                labelText: "Input Name",
+                labelText: "Input Data",
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
@@ -44,12 +40,14 @@ class AddMediaScreen extends StatelessWidget {
               height: 16,
             ),
             ButtonPrimary(
-                color: app_color.primary,
-                text: 'Add Contact',
-                onPressed: () => addContact({
-                      'name': nameCtrl.text,
-                      'phone_number': phoneNumberCtrl.text
-                    }))
+              color: app_color.primary,
+              text: 'Add Data',
+              onPressed: () {
+                dataController.setData(dataCtrl.text).then((value) {
+                  Get.back();
+                });
+              },
+            )
           ],
         ),
       ),

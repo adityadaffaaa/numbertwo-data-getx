@@ -38,9 +38,22 @@ dependencies:
 
 dev_dependencies:
   location:
+  get:
+  video_thumbnail:
+  video_player: ^2.2.16
   google_maps_flutter: ^2.0.10
   shared_preferences: ^2.0.15
+  cloud_firestore: ^4.1.0
+  firebase_storage: ^11.0.6
+  firebase_core: ^2.3.0
+  firebase_auth: ^4.1.5
+  image_picker: ^0.8.4+1
   google_fonts:
+  google_sign_in:
+  appinio_video_player: ^1.2.2
+  firebase_core_platform_interface:
+  dotted_border: ^2.0.0+3
+  url_launcher: 
   flutter_test:
     sdk: flutter
 

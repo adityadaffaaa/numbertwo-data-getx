@@ -4,7 +4,6 @@ import 'package:flutter_number_2/utils/images.dart' as app_img;
 
 PreferredSizeWidget? customAppBar(
   BuildContext context,
-  bool isPurple,
   String title,
 ) {
   return AppBar(

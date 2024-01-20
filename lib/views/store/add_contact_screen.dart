@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_number_2/controllers/contact/contact_controller.dart';
+import 'package:flutter_number_2/controllers/credentials/auth_controller.dart';
 import 'package:flutter_number_2/widgets/button_primary.dart';
 import 'package:flutter_number_2/widgets/button_secondary.dart';
 import 'package:flutter_number_2/utils/colors.dart' as app_color;
 import 'package:flutter_number_2/utils/typography.dart' as app_typo;
 import 'package:flutter_number_2/utils/images.dart' as app_img;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
 class AddContactScreen extends StatelessWidget {
   const AddContactScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ContactController contactController = Get.put(ContactController());
+    final AuthController authController = Get.put(AuthController());
+
     final TextEditingController nameCtrl = TextEditingController();
     final TextEditingController phoneNumberCtrl = TextEditingController();
-
-    Future<void> addContact(Map<String, dynamic> value) async {
-      print('TESTING -> $value');
-      final prefs = await SharedPreferences.getInstance();
-
-      prefs.setStringList('contact_list', [value.toString()]);
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -60,10 +59,24 @@ class AddContactScreen extends StatelessWidget {
             ButtonPrimary(
                 color: app_color.primary,
                 text: 'Add Contact',
-                onPressed: () => addContact({
-                      'name': nameCtrl.text,
-                      'phone_number': phoneNumberCtrl.text
-                    }))
+                onPressed: () {
+                  contactController
+                      .addContact(
+                    uid: authController.user.value!.uid,
+                    name: nameCtrl.text,
+                    phoneNumber: phoneNumberCtrl.text,
+                  )
+                      .then((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('You have successfully added a contact'),
+                        backgroundColor: Colors.green,
+                        behavior: SnackBarBehavior.fixed,
+                      ),
+                    );
+                    Get.back();
+                  });
+                })
           ],
         ),
       ),
