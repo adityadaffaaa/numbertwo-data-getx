@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -18,6 +19,8 @@ class MainMap extends StatefulWidget {
 }
 
 class MainMapState extends State<MainMap> {
+  bool _isMounted = false;
+
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
@@ -32,35 +35,38 @@ class MainMapState extends State<MainMap> {
   );
 
   Future<void> getCurrentLocation() async {
-    Location location = Location();
+    if (_isMounted) {
+      Location location = Location();
 
-    await location.getLocation().then((location) {
-      setState(() {
-        currentLocation = location;
+      await location.getLocation().then((location) {
+        setState(() {
+          currentLocation = location;
+        });
       });
-    });
 
-    GoogleMapController googleMapController = await _controller.future;
+      GoogleMapController googleMapController = await _controller.future;
 
-    location.onLocationChanged.listen((newLoc) {
-      currentLocation = newLoc;
+      location.onLocationChanged.listen((newLoc) {
+        currentLocation = newLoc;
 
-      googleMapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            zoom: 14,
-            target: LatLng(newLoc.latitude!, newLoc.longitude!),
+        googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              zoom: 14,
+              target: LatLng(newLoc.latitude!, newLoc.longitude!),
+            ),
           ),
-        ),
-      );
+        );
 
-      setState(() {});
-    });
+        setState(() {});
+      });
+    }
   }
 
   @override
   void initState() {
     // TODO: implement initState
+    _isMounted = true;
     getCurrentLocation();
     super.initState();
   }
@@ -68,8 +74,7 @@ class MainMapState extends State<MainMap> {
   @override
   void dispose() {
     // TODO: implement dispose
-    Location().onLocationChanged.listen(null).cancel();
-
+    _isMounted = false;
     super.dispose();
   }
 
@@ -111,13 +116,16 @@ class MainMapState extends State<MainMap> {
 
       final String whatsappUrl =
           "whatsapp://send?text=${Uri.encodeComponent(message)}";
-
-      if (await canLaunch(whatsappUrl)) {
+      try {
         await launch(whatsappUrl);
-      } else {
+      } catch (e) {
         Get.snackbar(
-            "Something Wrong!", 'WhatsApp is not installed on your device.',
-            backgroundColor: app_color.red, colorText: app_color.white);
+          "Error",
+          'An error occurred while trying to share location.',
+          backgroundColor: app_color.red,
+          colorText: app_color.white,
+        );
+        debugPrint("Error: $e");
       }
     }
   }
